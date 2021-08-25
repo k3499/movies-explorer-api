@@ -2,14 +2,10 @@ const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const { errors, celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-const users = require('./routes/users');
-const movie = require('./routes/movie');
-const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const notRoutes = require('./routes/notRoutes');
+const router = require('./routes');
 const allErrors = require('./errors/allErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 // Массив доменов, с которых разрешены кросс-доменные запросы
@@ -60,38 +56,7 @@ app.use(cookieParser());
 app.use(requestLogger); // подключаем логгер запросов
 app.use(limiter);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(
-      /^((http|https):\/\/)(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9-]*\.)+[A-Za-zА-Яа-я0-9-]{2,8}(([\w\-._~:/?#[\]@!$&'()*+,;=])*)/,
-    ),
-    about: Joi.string().min(2).max(30),
-  }),
-}), createUser);
-
-app.post('/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
-    }),
-  }), login);
-
-app.use(auth);
-
-app.use(users);
-app.use(movie);
-
-app.use(notRoutes);
+app.use(router);
 
 app.use(errorLogger);
 app.use(errors()); // обработчик celebrate
