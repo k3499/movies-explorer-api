@@ -22,6 +22,7 @@ const limiter = rateLimit({
 const app = express();
 
 const { PORT = 3000 } = process.env;
+const { DATA_BASE, NODE_ENV } = process.env;
 
 // подключаемся к серверу mongo
 mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : 'mongodb://localhost:27017/bitfilmsdb', {
