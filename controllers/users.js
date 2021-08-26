@@ -11,7 +11,7 @@ require('dotenv').config();
 const { JWT_SECRET = 'dev-secret', NODE_ENV } = process.env;
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.user._id)
     .orFail(new NotFoundError('Пользователь с указанным _id не найден.'))
     .then((user) => {
       res.status(ERR_CODE_200).send(user);

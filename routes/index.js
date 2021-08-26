@@ -11,7 +11,7 @@ router.post('/signup', signupValidator, createUser);
 router.post('/signin', signinValidator, login);
 
 router.use(auth);
-router.use('/users/me', usersRouter)
+router.use('/users/me/', usersRouter)
 router.use('/movies', moviesRouter)
 router.use(notRoutes);
 module.exports = router;
