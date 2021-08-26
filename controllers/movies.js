@@ -53,21 +53,21 @@ const addMovie = (req, res, next) => {
     movieId,
     owner,
   })
-  .then((movie) => res.status(ERR_CODE_200).send({
-        _id: movie._id,
-        country: movie.country,
-        director: movie.director,
-        duration: movie.duration,
-        year: movie.year,
-        description: movie.description,
-        image: movie.image,
-        trailer: movie.trailer,
-        nameRU: movie.nameRU,
-        nameEN: movie.nameEN,
-        thumbnail: movie.thumbnail,
-        movieId: movie.movieId,
-      }))
-      .catch((err) => {
+    .then((movie) => res.status(ERR_CODE_200).send({
+      _id: movie._id,
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: movie.image,
+      trailer: movie.trailer,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+      thumbnail: movie.thumbnail,
+      movieId: movie.movieId,
+    }))
+    .catch((err) => {
       if (err.name === 'ValidationError') {
         next(
           new BadRequest('Некорректные данные создания карточки.'),

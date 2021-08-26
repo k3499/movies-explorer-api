@@ -64,10 +64,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  owner: {
-    type: [mongoose.Schema.Types.ObjectId],
-    required: true,
-  },
   movieId: {
     type: Number,
     required: true,

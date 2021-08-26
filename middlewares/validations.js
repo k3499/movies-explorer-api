@@ -5,15 +5,15 @@ const signupValidator = celebrate({
     name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  })
-})
+  }),
+});
 
 const signinValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
-})
+});
 
 const movieValidator = celebrate({
   body: Joi.object().keys({
@@ -29,15 +29,14 @@ const movieValidator = celebrate({
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
-})
+});
 
 const delMovieValidator = celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().required().length(24).hex(),
   }),
-})
-
+});
 
 module.exports = {
-  signupValidator, signinValidator, movieValidator, delMovieValidator
-}
+  signupValidator, signinValidator, movieValidator, delMovieValidator,
+};
