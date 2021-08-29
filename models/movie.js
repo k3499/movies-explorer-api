@@ -21,12 +21,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
-    type: String,
-    minlength: 2,
-    maxlength: 30,
-    required: true,
-  },
   image: {
     type: String,
     required: true,
@@ -59,10 +53,6 @@ const userSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
     select: false,
-  },
-  link: {
-    type: String,
-    required: true,
   },
   movieId: {
     type: Number,

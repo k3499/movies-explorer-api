@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const rateLimit = require('express-rate-limit');
+const { limiter } = require('./utils/limiter');
 const router = require('./routes');
 const allErrors = require('./errors/allErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -15,21 +15,19 @@ const allowedCors = [
   'http://localhost:3000',
   'https://mesto.k3499.nomoredomains.club',
 ];
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 const app = express();
 
 const { PORT = 3000 } = process.env;
 const { DATA_BASE, NODE_ENV } = process.env;
 
 // подключаемся к серверу mongo
-mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : 'mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : 'mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
+app.use(requestLogger); // подключаем логгер запросов
+app.use(limiter);
 
 app.use((req, res, next) => {
   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
@@ -54,8 +52,6 @@ app.use((req, res, next) => {
 app.use('/', express.json());
 app.use(helmet());
 app.use(cookieParser());
-app.use(requestLogger); // подключаем логгер запросов
-app.use(limiter);
 
 app.use(router);
 

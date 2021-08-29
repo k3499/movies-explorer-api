@@ -3,6 +3,7 @@ const { ERR_CODE_200 } = require('../serverErrors');
 const BadRequest = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const Forbidden = require('../errors/forbidden');
+const { movieIdNotFound, movieNotAllowed, badRequest } = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   const owner = req.user._id;
@@ -13,23 +14,17 @@ const getMovies = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findByIdAndRemove(req.params.movieId)
-    .orFail(new NotFoundError('Карточка не найдена.'))
+  Movie.findById(req.params.movieId)
+    .orFail(new NotFoundError(movieIdNotFound))
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        throw new Forbidden('Можно удалять только свои карточки.');
+        throw new Forbidden(movieNotAllowed);
       } else {
-        res.status(ERR_CODE_200).send({ message: `Карточка ${movie} удалена` });
+        Movie.findByIdAndRemove(req.params.movieId)
+          .then((deletedMovie) => res.send(deletedMovie));
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(
-          new BadRequest('Передан неправильный ID карточки.'),
-        );
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 const addMovie = (req, res, next) => {
@@ -70,7 +65,7 @@ const addMovie = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(
-          new BadRequest('Некорректные данные создания карточки.'),
+          new BadRequest(badRequest),
         );
       }
       return next(err);

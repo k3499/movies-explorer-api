@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "eslint ./public"
+    "eslint": "eslint ./app.js"
   },
   "repository": {
     "type": "git",
