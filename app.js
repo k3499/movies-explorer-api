@@ -18,10 +18,10 @@ const allowedCors = [
 const app = express();
 
 const { PORT = 3000 } = process.env;
-const { DATA_BASE, NODE_ENV } = process.env;
+const { DATA_BASE = 'mongodb://localhost:27017/moviesdb' } = process.env;
 
 // подключаемся к серверу mongo
-mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : 'mongodb://localhost:27017/moviesdb', {
+mongoose.connect(`${DATA_BASE}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,

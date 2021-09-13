@@ -21,7 +21,15 @@ const deleteMovie = (req, res, next) => {
         throw new Forbidden(movieNotAllowed);
       } else {
         Movie.findByIdAndRemove(req.params.movieId)
-          .then((deletedMovie) => res.send(deletedMovie));
+          .then((deletedMovie) => res.send(deletedMovie))
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              next(
+                new BadRequest(badRequest),
+              );
+            }
+            return next(err);
+          });
       }
     })
     .catch(next);
@@ -32,7 +40,7 @@ const addMovie = (req, res, next) => {
     country, director, duration, year, description,
     image, trailer, nameRU, nameEN, thumbnail, movieId,
   } = req.body;
-  const owner = req.user._id;
+  // const owner = req.user._id;
 
   Movie.create({
     country,
@@ -46,7 +54,7 @@ const addMovie = (req, res, next) => {
     nameEN,
     thumbnail,
     movieId,
-    owner,
+    owner: req.user._id,
   })
     .then((movie) => res.status(ERR_CODE_200).send({
       _id: movie._id,
@@ -61,6 +69,7 @@ const addMovie = (req, res, next) => {
       nameEN: movie.nameEN,
       thumbnail: movie.thumbnail,
       movieId: movie.movieId,
+      owner: movie.owner,
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
