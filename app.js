@@ -13,7 +13,9 @@ const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
   'http://localhost:3000',
-  'https://mesto.k3499.nomoredomains.club',
+  'https://api.nomoreparties.co/beatfilm-movies',
+  'https://api.moviesearch.nomoredomains.club',
+  'https://moviesearch.nomoredomains.club',
 ];
 const app = express();
 
